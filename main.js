@@ -95,7 +95,7 @@ class JuegoScene extends Phaser.Scene {
 
 
 
-    this.add.text(120, 20, '¡HOLA AMIGOS! ¿NOS AYUDÁIS A RESCATAR A LAS TORTUGAS?', {
+    this.add.text(100, 20, '¡HOLA AMIGOS! ¿NOS AYUDÁIS A RESCATAR A LAS TORTUGAS?', {
       fontSize: '22px',
       fontStyle: 'bold',
       fill: '#000'
@@ -232,17 +232,18 @@ function iniciarOperacion(scene, tipo) {
   let tortugas = Phaser.Math.Between(2, 5);
   let huevorotos = Phaser.Math.Between(2, 5);
   let huevoentero = Phaser.Math.Between(3, 6);
-  let huevoroto = Phaser.Math.Between(1, Math.max(1, huevoentero - 2));
+  let huevoroto = Phaser.Math.Between(2, Math.max(1, huevoentero - 2));
   total = (tipo === 'sumar') ? huevorotos + tortugas : Math.abs(huevoentero - huevoroto);  
   textoProblema = scene.add.text(100, 50,
     (tipo === 'sumar')
-      ? ` Tenemos  ${tortugas} tortugas atascadas entre las rocas  y  ${huevorotos} tortugas naciendo de su huevo. ¿Cuántas tortugas hay en total? Mételas en la cesta`
-      : `Tenemos ${huevoentero} huevos enteros y ${huevoroto} huevos abiertos. ¿Cuantos tenemos que meter en la cesta?`,
+      ? `Tenemos  ${tortugas} tortugas atascadas entre las rocas  y  ${huevorotos} tortugas naciendo de su huevo. ¿Cuántas tortugas hay en total? Mételas en la cesta`
+      : `Si tenemos ${huevoentero} huevos cerrados y quitamos ${huevoroto} huevos abiertos. ¿Cuántos huevos cerrados quedan en el nido?`,
     { fontSize: '22px', fill: '#000', wordWrap: { width: 600 } }
   );
 
   if (tipo === 'restar') {
     total = huevoroto;
+    contadorTortugas = huevoentero + huevoroto;
   }
   // Crear peces para arrastrar en la operación
   pecesOperacion = [];
@@ -296,13 +297,20 @@ function iniciarOperacion(scene, tipo) {
     gameObject.x = dragX;
     gameObject.y = dragY;
   });
-
+  actualizarTexto();
   pecesOperacion.forEach(pez => {
     pez.on('dragend', (pointer) => {
         const distancia = Phaser.Math.Distance.Between(pez.x, pez.y, cubo.x, cubo.y);
         if (distancia < 100) {
-        contadorTortugas++;
-        contadorOperacion++;
+          if (tipo === 'restar') {
+            contadorTortugas--;
+            contadorOperacion++;
+          }
+          else{
+            contadorTortugas++;
+            contadorOperacion++;
+          }
+        
 
         // Animación de caída al cubo antes de destruir
         scene.tweens.add({
