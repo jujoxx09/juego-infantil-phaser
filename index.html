@@ -11,18 +11,29 @@
   <!-- Nuestro script del juego -->
   <script defer src="main.js"></script>
 
-  <style>
-    body {
-      margin: 0;
-      background: #87CEEB;
-      overflow: hidden;
-      text-align: center;
-      font-family: "Comic Sans MS", sans-serif;
-    }
-  </style>
+<style>
+  body {
+    background-color: #87CEFA; /* color del fondo de la página */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+
+  #game-container {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  canvas {
+    display: block;
+  }
+</style>
+
 </head>
 <body>
-  <h2>Amigos en la playa</h2>
   <div id="game-container"></div>
 </body>
 </html>
