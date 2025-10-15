@@ -1,46 +1,43 @@
 // ============================
 // 🎬 ESCENA DE PORTADA
 // ============================
+
+'probando ++'
 class PortadaScene extends Phaser.Scene {
   constructor() {
     super({ key: 'PortadaScene' });
   }
 
   preload() {
-    this.load.image('fondo', 'assets/fondo2.png');
+    this.load.image('fondo1', 'assets/fondo1.png');
     this.load.image('tortuga', 'assets/tortuga.png');
     this.load.image('cubo', 'assets/cesta.png');
     this.load.audio('saludo', 'assets/saludo.mp3');
   }
 
   create() {
-    this.add.image(500, 300, 'fondo').setScale(1);
+    this.add.image(500, 300, 'fondo1').setScale(0.7);
 
     // 🏷️ Título
-    this.add.text(500, 80, '¡RESCATEMOS A LAS TORTUGAS MARINAS!', {
-      fontSize: '42px',
-      fill: '#004D40',
+    this.add.text(500, 200, '¡RESCATEMOS A LAS TORTUGAS MARINAS!', {
+      fontSize: '30px',
+      fill: '#000000ff',
       fontStyle: 'bold',
-      fontFamily: 'Comic Sans MS'
+      fontFamily: 'Comic Sans MS',
+      backgroundColor: '#FFF176'
     }).setOrigin(0.5);
 
-    // 👧 Nombres alumnas
-    this.add.text(400, 250, 'Por: Mª Luna Andrade · María Moreno · Ana Guillén', {
-      fontSize: '28px',
-      fill: '#333',
-      fontFamily: 'Comic Sans MS'
-    }).setOrigin(0.3);
 
     // 🧺 Cesta
-    cubo = this.add.image(500, 420, 'cubo').setScale(0.8);
+    cubo = this.add.image(300, 420, 'cubo').setScale(0.5);
 
     // 🐢 Tortugas animadas dentro de la cesta
     for (let i = 0; i < 4; i++) {
       const tortuga = this.add.image(
-        500 + Phaser.Math.Between(-50, 50),
-        380 + Phaser.Math.Between(-30, 30),
+        300 + Phaser.Math.Between(-50, 50),
+        400 + Phaser.Math.Between(-30, 30),
         'tortuga'
-      ).setScale(0.12);
+      ).setScale(0.1);
 
       this.tweens.add({
         targets: tortuga,
@@ -56,7 +53,7 @@ class PortadaScene extends Phaser.Scene {
     boton = this.add.text(500, 520, 'EMPEZAR 🐢', {
       fontSize: '32px',
       backgroundColor: '#FFF176',
-      fill: '#000',
+      fill: '#000000ff',
       padding: { x: 20, y: 10 },
       fontFamily: 'Comic Sans MS'
     })
@@ -81,14 +78,22 @@ class JuegoScene extends Phaser.Scene {
     this.load.image('huevoentero', 'assets/huevoentero.png');
     this.load.image('tortuga', 'assets/tortuga.png');
     this.load.image('cubo', 'assets/cesta.png');
+    this.load.image('piedra', 'assets/piedra.png');
     this.load.audio('musica', 'assets/musica.mp3');
     this.load.audio('saludo', 'assets/saludo.mp3');
+    this.load.audio('audioSuma', 'assets/suma.mp3');
+    this.load.audio('audioResta', 'assets/resta.mp3');
+    this.load.image('bien', 'assets/bien.png');
+    this.load.image('mal', 'assets/mal.png');
   }
 
   create() {
     this.add.image(500, 300, 'fondo').setScale(1);
     this.add.image(750, 400, 'amigo2').setScale(0.6);
+    this.add.image(400, 500, 'piedra').setScale(0.4);
     cubo = this.add.image(500, 500, 'cubo').setScale(0.4);
+
+
 
     this.add.text(120, 20, '¡HOLA AMIGOS! ¿NOS AYUDÁIS A RESCATAR A LAS TORTUGAS?', {
       fontSize: '22px',
@@ -152,7 +157,7 @@ class JuegoScene extends Phaser.Scene {
     this.input.on('dragend', listenerDragEnd);
 
     // 🧮 Fondo y texto contador
-    fondoContador = this.add.rectangle(230, 160, 260, 40, 0xFFF9A6, 0.8);
+    fondoContador = this.add.rectangle(260, 160, 300, 40, 0xFFF9A6, 0.8);
     textoContador = this.add.text(130, 150, '', {
       fontSize: '26px',
       fill: '#000',
@@ -179,6 +184,7 @@ let totalAnimales = 0;
 let juegoActivo = true;
 let pecesOperacion = [];
 let textoProblema;
+let total = 0;
 
 // ============================
 // FUNCIONES AUXILIARES
@@ -206,6 +212,7 @@ function crearBotones(scene) {
 }
 
 function iniciarOperacion(scene, tipo) {
+  
   // Desactivamos solo el evento global de conteo,
   // pero mantenemos los eventos de arrastre activos
   scene.input.off('dragend', listenerDragEnd);
@@ -220,15 +227,17 @@ function iniciarOperacion(scene, tipo) {
   contadorPeces = 0;
   contadorOperacion = 0;
   actualizarTexto();
-
-  let huevoantes = Phaser.Math.Between(1, 5);
-  let huevoentero = Phaser.Math.Between(2, 5);
-  let huevoroto = Phaser.Math.Between(1, huevoentero - 1);
-  let total = (tipo === 'sumar') ? huevoantes + huevoentero : Math.abs(huevoentero - huevoroto);  
+  const narracion = scene.sound.add(tipo === 'sumar' ? 'audioSuma' : 'audioResta');
+  narracion.play();
+  let tortugas = Phaser.Math.Between(2, 5);
+  let huevorotos = Phaser.Math.Between(2, 5);
+  let huevoentero = Phaser.Math.Between(3, 6);
+  let huevoroto = Phaser.Math.Between(1, Math.max(1, huevoentero - 2));
+  total = (tipo === 'sumar') ? huevorotos + tortugas : Math.abs(huevoentero - huevoroto);  
   textoProblema = scene.add.text(100, 50,
     (tipo === 'sumar')
-      ? `¡Mirad cuantos huevos de tortugas hay! ¿Cuántos huevos tenemos en total1? ${huevoentero} huevos de torugas y antes habian ${huevoantes} huevos. ¿Cuántos hay en total?`
-      : `El chico encontro ${huevoentero} huevos enteros y ${huevoroto} tortugas naciendo. ¿Si restamos los huevos rotos, cuanto nos quedan?`,
+      ? ` Tenemos  ${tortugas} tortugas atascadas entre las rocas  y  ${huevorotos} tortugas naciendo de su huevo. ¿Cuántas tortugas hay en total? Mételas en la cesta`
+      : `Tenemos ${huevoentero} huevos enteros y ${huevoroto} huevos abiertos. ¿Cuantos tenemos que meter en la cesta?`,
     { fontSize: '22px', fill: '#000', wordWrap: { width: 600 } }
   );
 
@@ -240,12 +249,21 @@ function iniciarOperacion(scene, tipo) {
   // Peces de la chica
   if (tipo === 'sumar') {
     // Solo generamos los huevos enteros
-    for (let i = 0; i < total; i++) {
+    for (let i = 0; i < tortugas; i++) {
         const huevo = scene.add.image(
-            Phaser.Math.Between(100, 400),
-            Phaser.Math.Between(400, 500),
-            'huevoentero'
-        ).setInteractive({ draggable: true }).setScale(0.2);
+            Phaser.Math.Between(300, 400), 
+            Phaser.Math.Between(500, 550),
+            'tortuga'
+        ).setInteractive({ draggable: true }).setScale(0.1);
+        pecesOperacion.push(huevo);
+    }
+
+    for (let i = 0; i < huevorotos; i++) {
+        const huevo = scene.add.image(
+            Phaser.Math.Between(100, 200), 
+            Phaser.Math.Between(500, 550),
+            'huevoroto'
+        ).setInteractive({ draggable: true }).setScale(0.15);
         pecesOperacion.push(huevo);
     }
   } else {
@@ -298,18 +316,41 @@ function iniciarOperacion(scene, tipo) {
             pez.destroy();
             actualizarTexto();
 
-            if (contadorOperacion === total) {
-                mostrarResultado(scene);
-            }
+            // ✅ Botón comprobar
+            
+            botonComprobar = scene.add.text(700, 500, 'COMPROBAR ✅', {
+              fontSize: '26px',
+              backgroundColor: '#FFEB3B',
+              padding: 10
+            })
+              .setInteractive()
+              .on('pointerdown', () => verificarResultado(scene));
             }
         });
         }
     });
   });
 
+  
+}
+
+function verificarResultado(scene) {
+  const exito = contadorOperacion === total;
+  const img = scene.add.image(500, 300, exito ? 'bien' : 'mal').setScale(0.5);
+  const texto = scene.add.text(500, 500,
+    exito ? '¡Genial, lo has conseguido! 🎉' : 'Está mal, inténtalo de nuevo 😅',
+    { fontSize: '26px', fill: '#000', fontFamily: 'Comic Sans MS' }
+  ).setOrigin(0.5);
+
+  scene.time.delayedCall(2500, () => {
+    img.destroy();
+    texto.destroy();
+    mostrarResultado(scene);
+  });
 }
 
 function mostrarResultado(scene) {
+  botonComprobar.destroy();
   const mensajeFinal = scene.add.text(130, 200, '¡Muy bien! ¿Qué quieres hacer ahora?', 
     { fontSize: '26px', fill: '#000', wordWrap: { width: 400 } });
 

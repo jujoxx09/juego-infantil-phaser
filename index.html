@@ -11,29 +11,140 @@
   <!-- Nuestro script del juego -->
   <script defer src="main.js"></script>
 
-<style>
-  body {
-    background-color: #87CEFA; /* color del fondo de la página */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-  }
+  <!-- Íconos de Font Awesome -->
+   <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+  <style>
+    body {
+      background-color: #87CEFA; /* fondo tipo cielo */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      color: #034f84;
+      scroll-behavior: smooth; /* desplazamiento suave */
+    }
 
-  #game-container {
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-    border-radius: 12px;
-    overflow: hidden;
-  }
+    header {
+      text-align: center;
+      margin-top: 50px;
+      background-color: #ffffffcc;
+      padding: 80px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      max-width: 850px;
+    }
 
-  canvas {
-    display: block;
-  }
-</style>
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+      color: #006994;
+    }
 
+    header p {
+      font-size: 1.1rem;
+      margin-top: 10px;
+    }
+
+    .iconos {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      margin-top: 15px;
+      font-size: 2.2rem;
+    }
+
+    .alumnas {
+      margin-top: 15px;
+      font-weight: bold;
+      color: #004c70;
+      font-size: 1rem;
+    }
+
+    .asignatura {
+      margin-top: 10px;
+      font-size: 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      color: #003d5c;
+    }
+
+    .asignatura img {
+      width: 150px;
+      height: auto;
+      vertical-align: middle;
+    }
+
+    .flecha {
+      margin-top: 20px;
+      font-size: 2rem;
+      cursor: pointer;
+      animation: mover 1.2s infinite;
+      color: #004c70;
+    }
+
+    @keyframes mover {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
+
+    #game-container {
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 50px;
+    }
+
+    canvas {
+      display: block;
+    }
+  </style>
 </head>
 <body>
+  <header>
+    <h1>🎮 Juego Infantil: Sumas y Restas 🏖️</h1>
+    <p>¡Aprende Sumas y Restas Ayudando a rescatar tortugas Marinas! 
+       Mueve a las tortugas durante los ejercicios, hasta conseguir que lleguen al mar junto a su familia.</p>
+
+    <div class="iconos">
+  <!-- Icono de matemáticas -->
+      <div>➕➖</div>   <!-- operaciones matemáticas -->
+      <div>🐢</div>     <!-- tortuga protagonista -->
+      <div>🌊</div>     <!-- el mar, destino de las tortugas -->
+    </div>
+
+    <div class="alumnas">
+      <p>Alumnas: Mª Luna Andrade · María Moreno · Ana Guillén</p>
+    </div>
+
+    <div class="asignatura">
+      <span>Didáctica de las Matemáticas en la Vida en Educación Infantil</span>
+      <span>| Universidad Loyola</span>
+      <img src="assets/logo.png" alt="Logo Universidad Loyola" />
+    </div>
+
+    <div class="flecha" id="flecha">
+      <i class="fas fa-arrow-down"></i>
+    </div>
+  </header>
+
   <div id="game-container"></div>
+
+  <script>
+    // Al hacer clic en la flecha, deslizar hasta el juego
+    document.getElementById('flecha').addEventListener('click', () => {
+      document.getElementById('game-container').scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+    });
+  </script>
 </body>
 </html>
+
+
